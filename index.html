@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cattelan Banana Trends</title>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <!-- Favicon (emoji-based for simplicity; replace with your own image if needed) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍌</text></svg>">
     <style>
         * {
             box-sizing: border-box;
@@ -12,46 +14,48 @@
             padding: 0;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #F9FAFB 0%, #E5E7EB 100%);
-            color: #1F2937;
+            background: linear-gradient(135deg, #2B3A67, #4A7B8C, #E8ECEF);
+            color: #2D3748;
             line-height: 1.6;
         }
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 32px 16px;
+            padding: 40px 20px;
         }
         h1 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 16px;
-            color: #1E40AF;
+            color: #FFFFFF;
             text-align: center;
-            animation: fadeIn 1s ease-in;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            animation: slideIn 1s ease-out;
         }
         p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 24px;
-            color: #4B5563;
+            color: #E8ECEF;
             text-align: center;
+            opacity: 0.9;
         }
-        .form-container {
-            background-color: #FFFFFF;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 32px;
-            transition: transform 0.3s ease;
+        .form/container {
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            transition: box-shadow 0.3s ease;
         }
         .form-container:hover {
-            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
         .form-row {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
         @media (min-width: 640px) {
             .form-row {
@@ -63,48 +67,49 @@
         }
         .form-group label {
             display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             margin-bottom: 8px;
-            color: #1F2937;
+            color: #2D3748;
         }
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            background-color: #F9FAFB;
+            padding: 12px;
+            border: 1px solid #D2D6DC;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #F7FAFC;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .form-group input:focus {
             outline: none;
-            border-color: #3B82F6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #4A7B8C;
+            box-shadow: 0 0 0 3px rgba(74, 123, 140, 0.2);
         }
         .button-group {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             justify-content: center;
+            margin-top: 20px;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
         button:hover {
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .btn-primary {
-            background-color: #3B82F6;
+            background-color: #2B3A67;
             color: #FFFFFF;
         }
         .btn-primary:hover {
-            background-color: #2563EB;
+            background-color: #3E5C76;
         }
         .btn-secondary {
             background-color: #6B7280;
@@ -113,34 +118,29 @@
         .btn-secondary:hover {
             background-color: #4B5563;
         }
-        .chart-toggle {
-            background-color: #10B981;
-            color: #FFFFFF;
-            margin: 16px auto;
-            display: block;
-        }
-        .chart-toggle:hover {
-            background-color: #059669;
-        }
         .note {
-            font-size: 0.875rem;
-            color: #6B7280;
+            font-size: 0.9rem;
+            color: #D2D6DC;
             text-align: center;
             margin-bottom: 24px;
+            opacity: 0.8;
         }
         .error {
-            color: #EF4444;
-            font-size: 0.875rem;
+            color: #9B2C2C;
+            font-size: 0.9rem;
             text-align: center;
             margin-bottom: 24px;
+            background-color: rgba(254, 242, 242, 0.9);
+            padding: 10px;
+            border-radius: 8px;
             animation: fadeIn 0.5s ease-in;
         }
         .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #3B82F6;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #4A7B8C;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 32px auto;
             display: none;
@@ -157,26 +157,31 @@
         .chart {
             width: 100%;
             min-height: 500px;
-            margin-bottom: 32px;
-            background-color: #FFFFFF;
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             animation: fadeIn 1s ease-in;
+            transition: box-shadow 0.3s ease;
         }
-        .chart.hidden {
-            display: none;
+        .chart:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Cattelan Banana Trends</h1>
-        <p>Search interest trends for <i>Comedian</i> the Banana.</p>
+        <h1>Cattelan's Banana Trends</h1>
+        <p>Search interest trends for <i>Comedian</i> the Banana. </p>
         
         <form class="form-container" id="date-form">
             <div class="form-row">
@@ -200,9 +205,7 @@
         <div id="spinner" class="spinner"></div>
         <div id="error" class="error" style="display: none;"></div>
         
-        <button class="chart-toggle" onclick="toggleCharts()" style="display: none;">Show Chart 2</button>
         <div class="chart" id="chart-1"></div>
-        <div class="chart hidden" id="chart-2"></div>
     </div>
 
     <script>
@@ -314,26 +317,6 @@
             return (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
         }
 
-        // Calculate 3-month rolling average
-        function calculateRollingAverage(data, window = 3) {
-            return data.map((_, i) => {
-                const slice = data.slice(Math.max(0, i - window + 1), i + 1);
-                const avg = slice.reduce((sum, d) => sum + d.Search_Interest, 0) / slice.length;
-                return isNaN(avg) ? 0 : avg;
-            });
-        }
-
-        // Toggle Charts
-        let currentChart = 1;
-        function toggleCharts() {
-            const chart1 = document.getElementById('chart-1');
-            const chart2 = document.getElementById('chart-2');
-            chart1.classList.toggle('hidden');
-            chart2.classList.toggle('hidden');
-            currentChart = currentChart === 1 ? 2 : 1;
-            document.querySelector('.chart-toggle').textContent = `Show Chart ${currentChart}`;
-        }
-
         // Form Submission
         document.getElementById('date-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -379,72 +362,42 @@
             const months = getMonthsBetween(startDate, endDate);
             const tickInterval = months <= 12 ? 'M1' : months <= 24 ? 'M3' : 'M6';
 
-            // Chart 1: Raw Search Interest
+            // Chart: Raw Search Interest
             const trace1 = {
                 x: filteredData.map(d => d.Month),
                 y: filteredData.map(d => d.Search_Interest),
                 type: 'scatter',
                 mode: 'lines+markers',
                 name: 'Search Interest',
-                line: { color: '#3B82F6', width: 2, shape: 'spline' }
+                line: { color: '#4A7B8C', width: 2, shape: 'spline' },
+                marker: { size: 8 }
             };
             const maxInterest = Math.max(...filteredData.map(d => d.Search_Interest));
             const yRange = Math.max(maxInterest + 10, 20);
             const layout1 = {
-                title: 'Search Interest Over Time',
+                title: {
+                    text: 'Search Interest Over Time',
+                    font: { size: 20, color: '#2D3748' }
+                },
                 xaxis: {
                     title: 'Date',
                     tickformat: '%Y-%m',
-                    dtick: tickInterval
+                    dtick: tickInterval,
+                    gridcolor: '#E8ECEF'
                 },
                 yaxis: {
                     title: 'Search Interest',
                     dtick: 10,
-                    range: [0, yRange]
+                    range: [0, yRange],
+                    gridcolor: '#E8ECEF'
                 },
                 height: 500,
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 paper_bgcolor: 'rgba(0,0,0,0)',
-                margin: { l: 40, r: 40, t: 60, b: 40 }
+                margin: { l: 50, r: 50, t: 80, b: 50 },
+                showlegend: true
             };
             Plotly.newPlot('chart-1', [trace1], layout1);
-
-            // Chart 2: 3-Month Rolling Average
-            const rollingAvg = calculateRollingAverage(filteredData);
-            const trace2 = {
-                x: filteredData.map(d => d.Month),
-                y: rollingAvg,
-                type: 'scatter',
-                mode: 'lines+markers',
-                name: '3-Month Rolling Average',
-                line: { color: '#10B981', width: 2, shape: 'spline' }
-            };
-            const maxRolling = Math.max(...rollingAvg);
-            const yRange2 = Math.max(maxRolling + 10, 20);
-            const layout2 = {
-                title: '3-Month Rolling Average of Search Interest',
-                xaxis: {
-                    title: 'Date',
-                    tickformat: '%Y-%m',
-                    dtick: tickInterval
-                },
-                yaxis: {
-                    title: 'Search Interest (Rolling Avg)',
-                    dtick: 10,
-                    range: [0, yRange2]
-                },
-                height: 500,
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                margin: { l: 40, r: 40, t: 60, b: 40 }
-            };
-            Plotly.newPlot('chart-2', [trace2], layout2);
-
-            // Show toggle button and initialize charts
-            document.querySelector('.chart-toggle').style.display = 'block';
-            document.getElementById('chart-1').classList.remove('hidden');
-            document.getElementById('chart-2').classList.add('hidden');
-            document.querySelector('.chart-toggle').textContent = 'Show Chart 2';
 
             spinner.classList.remove('show');
         });
